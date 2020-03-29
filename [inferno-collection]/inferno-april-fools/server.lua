@@ -41,7 +41,7 @@ if Config.registerCommand then
                 break
             end
         end
-        
+
         if not AllPlayers[identifier] then
             AllPlayers[identizier] = source
         end
@@ -56,7 +56,7 @@ if Config.registerCommand then
                 break
             end
         end
-        
+
         AllPlayers[identifier] = nil
     end)
 
