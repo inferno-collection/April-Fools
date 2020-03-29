@@ -18,4 +18,7 @@ author 'Inferno Collection (inferno-collection.com)'
 version '1.0.1'
 url 'https://inferno-collection.com'
 
-server_script 'server.lua'
+server_scripts {
+  'config.lua',
+  'server.lua'
+}
