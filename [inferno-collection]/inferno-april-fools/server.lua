@@ -18,34 +18,52 @@ local AllPlayers = {}
 local players = {}
 
 if Config.onConnect then
-    AddEventHandler("playerConnecting", function()
+    AddEventHandler("playerConnecting", function(_, _, deferrals)
         local t = os.date("*t")
         if t.month == Config.onConnectDate.month and t.day == Config.onConnectDate.day then
             deferrals.defer()
             if not players[source] then
                 players[source] = true   -- They can reconnect
                 CancelEvent()
-                deferrals.done("You have been permanently banned from this server. You can view the reason and appeal this ban at " + Config.url)
+                deferrals.done("You have been permanently banned from this server. You can view the reason and appeal this ban at " .. Config.url)
             end
         end
     end)
 end
 
 if Config.registerCommand then
-    AddEventHandler("playerSpawned", function()
-        if not AllPlayers[source] then
-            AllPlayers[source] = true
+    AddEventHandler("playerConnecting", function()
+        local identifier
+
+        for k,v in ipairs(GetPlayerIdentifiers(source)) do
+            if string.match(v, 'license:') then
+                identifier = string.sub(v, 9)
+                break
+            end
+        end
+        
+        if not AllPlayers[identifier] then
+            AllPlayers[identizier] = source
         end
     end)
 
     AddEventHandler("playerDropped", function()
-        AllPlayers[source] = nil
+        local identifier
+
+        for k,v in ipairs(GetPlayerIdentifiers(source)) do
+            if string.match(v, 'license:') then
+                identifier = string.sub(v, 9)
+                break
+            end
+        end
+        
+        AllPlayers[identifier] = nil
     end)
 
     RegisterCommand(Config.commandName, function(source)
         if source == 0 then
-            for ID, _ in pairs(AllPlayers) do
-                DropPlayer(ID, '\n\nYou have been permanently banned from this server, reason:\n\nView reason and appeal at: ' + Config.url)
+            for ID, src in pairs(AllPlayers) do
+                DropPlayer(src, '\n\nYou have been permanently banned from this server, reason:\n\nView reason and appeal at: ' .. Config.url)
             end
         end
     end)
