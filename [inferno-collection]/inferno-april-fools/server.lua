@@ -43,7 +43,7 @@ if Config.registerCommand then
         end
 
         if not AllPlayers[identifier] then
-            AllPlayers[identizier] = source
+            AllPlayers[identifier] = source
         end
     end)
 
