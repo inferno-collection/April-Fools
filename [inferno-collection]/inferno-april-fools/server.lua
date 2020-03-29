@@ -14,7 +14,6 @@
 --		Do not make changes below this line unless you know what you are doing!
 --
 
-local AllPlayers = {}
 local players = {}
 
 if Config.onConnect then
@@ -32,38 +31,12 @@ if Config.onConnect then
 end
 
 if Config.registerCommand then
-    AddEventHandler("playerConnecting", function()
-        local identifier
-
-        for k,v in ipairs(GetPlayerIdentifiers(source)) do
-            if string.match(v, 'license:') then
-                identifier = string.sub(v, 9)
-                break
-            end
-        end
-
-        if not AllPlayers[identifier] then
-            AllPlayers[identifier] = source
-        end
-    end)
-
-    AddEventHandler("playerDropped", function()
-        local identifier
-
-        for k,v in ipairs(GetPlayerIdentifiers(source)) do
-            if string.match(v, 'license:') then
-                identifier = string.sub(v, 9)
-                break
-            end
-        end
-
-        AllPlayers[identifier] = nil
-    end)
-
     RegisterCommand(Config.commandName, function(source)
         if source == 0 then
-            for ID, src in pairs(AllPlayers) do
-                DropPlayer(src, '\n\nYou have been permanently banned from this server, reason:\n\nView reason and appeal at: ' .. Config.url)
+            for i=1,GetNumPlayerIndices(),1 do
+                if NetworkIsPlayerActive(GetPlayerFromServerId(i)) then
+                    DropPlayer(src, '\n\nYou have been permanently banned from this server, reason:\n\nView reason and appeal at: ' .. Config.url)
+                end
             end
         end
     end)
